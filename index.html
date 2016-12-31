@@ -74,7 +74,7 @@
         //add white text explaining where to click to move
 
 
-        game.physics.p2.defaultRestitution = 0.5;
+        game.physics.p2.defaultRestitution = 0.8;
         cursors = game.input.keyboard.createCursorKeys();
         game.input.addPointer();
 
@@ -104,14 +104,15 @@
 
                 sprite.socketid = players[i].socketid;
                 game.physics.p2.enable(sprite);
-                console.log(players[i]);
-                console.log(players[i].thrust);
-                console.log(players[i].angle);
-                console.log(sprite.body);
+                //console.log(players[i]);
+                //console.log(players[i].thrust);
+                //console.log(players[i].angle);
+                //console.log(sprite.body);
                 sprite.body.thrust(players[i].thrust);
                 sprite.body.angle = players[i].angle;
                 //sprite.body.setZeroDamping();
-                sprite.body.damping = 0.4;
+                sprite.body.damping = 0.05;
+                sprite.body.angulardamping = 0.05;
                 //sprite.body.velocity.x = 0;
                 //sprite.body.velocity.y = 0;
                 //sprite.body.fixedRotation = true;
@@ -138,7 +139,9 @@
             sprite.body.thrust(players[players.length - 1].thrust);
             sprite.body.angle = players[players.length - 1].angle;
             //sprite.body.setZeroDamping();
-            sprite.body.damping = 0.4;
+            sprite.body.damping = 0.05;
+            sprite.body.angulardamping = 0.05;
+
             //sprite.body.velocity.x = 0;
             //sprite.body.velocity.y = 0;
             //sprite.body.fixedRotation = true;
@@ -165,22 +168,31 @@
         }
 
         for(i=0;i<players.length;i++){
-            for(i=0;i<players.length;i++){
+
                 sprites[i].body.angle = players[i].angle;
+                sprites[i].body.x = players[i].x;
+                sprites[i].body.y = players[i].y;
                 sprites[i].body.thrust(players[i].thrust);
-                //sprites[i].body.velocity.y = players[i].y;
-                //console.log(sprites[i].x);
+                //console.log(sprites[i].body.x);
+                //console.log(sprites[i].body.y);
+
                 //console.log(sprites[i].y);
-
-
-            }
-
         }
     });
 
+    //phaser update
     function update() {
         //console.log(players);
-        if(players.length > 1) {
+        if(players.length > 0) {
+            for(i=0;i<players.length;i++) {
+                players[i].x = sprites[i].body.x;
+                players[i].y = sprites[i].body.y;
+                players[i].angle = sprites[i].body.angle;
+
+                //console.log(sprites[i].body.x);
+                //console.log(sprites[i].body.y);
+
+            }
             socket.emit('phaserupdate', players);
         }
 

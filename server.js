@@ -18,11 +18,12 @@ app.get('/', function(req, res){
 
 var players = [];
 
-var player = function(x,y,angle,thrust,socketid){
+var player = function(x,y,angle,thrust,speed,socketid){
     this.x = x;
     this.y = y;
     this.angle = angle;
     this.thrust = thrust;
+    this.speed = speed;
     this.socketid = socketid;
     
 }
@@ -67,7 +68,7 @@ io.on('connection', function(socket) {
     socket.on('up', function(msg){
         for(i=0;i<players.length;i++){
             if(players[i].socketid == msg){
-                players[i].thrust = 100;
+                players[i].thrust = 1000;
             }
         }
         io.emit('update',players);
@@ -86,7 +87,12 @@ io.on('connection', function(socket) {
     socket.on('phaserupdate', function(data){
     for(i=0;i<players.length;i++){
                 players[i].angle = data[i].angle;
+                players[i].x = data[i].x;
+                players[i].y = data[i].y;
                 players[i].thrust = data[i].thrust;
+                
+        
+        
         }
         io.emit('update',players);
     });
